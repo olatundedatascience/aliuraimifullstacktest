@@ -1,0 +1,5 @@
+{
+    "jwt": {
+        "key":"This is sample private key"
+    }
+}
