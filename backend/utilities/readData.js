@@ -77,6 +77,201 @@ function readUserData(username="akintunde", callback) {
 }
 
 
+function addMarketCategory(name, cb) {
+    try {
+        const storeLocation = path.join(__dirname, "../", "MarketCategory", name+".json")
+
+        fs.writeFile(storeLocation, JSON.stringify({
+            FoodCategory:name
+        }), (error)=>{
+            if(!error) {
+                cb(true)
+            }
+            else {
+                LogError("Error", new Date(), error, "Add Market Category", name)
+                cb(false)
+            }
+        })
+    }
+    catch (er) {
+        LogError("Error", new Date(), er, "Add Market Category", name)
+        cb(false)
+    }
+}
+
+function allMarketCategory() {
+    return new Promise((resolve, reject)=>{
+        const storeLocation = path.join(__dirname, "../", "MarketCategory")
+
+        fs.readdir(storeLocation, (er, data)=> {
+            if(!er) {
+                let categories = Array.from(data)
+                resolve(categories)
+            }
+            else {
+                LogError("Error", new Date(), er, "All Market Category", "");
+                reject(er)
+            }
+        })
+    });
+}
+
+function readMarketData(name) {
+
+    return new Promise((resolve, reject)=>{
+        var userObjectName = path.join(__dirname, "../", "marketsStore", name)
+        fs.readFile(userObjectName, (er, data)=>{
+            if(!er) {
+                const datum = JSON.parse(data)
+                //console.log(datum)
+                resolve(datum)
+            }
+            else {
+                LogError("An Error has occured", new Date(), er, "readuserData", name)
+                reject(er)
+            }
+        })
+
+
+
+    })
+
+}
+
+function readCategoryData(name) {
+    return new Promise((resolve, reject)=>{
+        var userObjectName = path.join(__dirname, "../", "MarketCategory", name)
+        fs.readFile(userObjectName, (er, data)=>{
+            if(!er) {
+                const datum = JSON.parse(data)
+                //console.log(datum)
+                resolve(datum)
+            }
+            else {
+                LogError("An Error has occured", new Date(), er, "readuserData", name)
+                reject(er)
+            }
+        })
+
+
+
+    })
+}
+function storeMarketInfo(marketInfo={name:"", images:[],description:"", location:"", Category:"", Price:0.00}, callback) {
+    try {
+        var marketsName = marketInfo.name+"_"+Date.now().toString()+".json"
+        var marketInfoName = path.join(__dirname, "../", "marketsStore", marketsName)
+       fs.writeFile(marketInfoName, JSON.stringify(marketInfo), (er)=>{
+           if(!er) {
+                //const datum = JSON.parse(data)
+                //console.log(datum)
+                callback(true)
+           }
+           else {
+                LogError("An Error has occured", new Date(), er, "storeMarketInfo", {name:marketsName, description:description, originalName:name})
+                callback(false)
+           }
+       })
+    }
+    catch(er) {
+        LogError("An Error has occured", new Date(), er, "storeMarketInfo", {name:marketsName, description:description, originalName:name})
+        callback(false)
+    }
+    
+}
+
+function getAllMarketData(callback=null) {
+
+    return new Promise((resolve, reject)=>{
+        let dir = path.join(__dirname, "../", "marketsStore");
+        var finalResuls = [];
+        fs.readdir(dir, (er, data)=>{
+            if(!er) {
+                let markets = Array.from(data)
+                let second = markets;
+                //console.log(markets)
+                //var finalResuls = []
+
+/*
+
+                for(var i=0;i<markets.length;i++) {
+                    let currentFilePath = path.join(__dirname,"../", "marketsStore", markets[i])
+                    fs.readFile(currentFilePath, (er, datum)=>{
+                        // console.log(datum)
+                        if(!er) {
+                            let currentData = JSON.parse(datum)
+                            let indexOf = second.indexOf(markets[i]);
+                            second.splice(indexOf, 1)
+                            second.push(currentData)
+                            //console.log(currentData)
+                            finalResuls.push(currentData)
+                            //console.log(finalResuls)
+                        }
+                        else {
+                            LogError('An Error has occured', new Date(), er, "reading file", v)
+                            reject(er)
+                        }
+                    })
+                }
+                */
+
+              //console.log(finalResuls)
+                /*
+                markets.forEach(v => {
+                    let currentFilePath = path.join(__dirname,"../", "marketsStore", v)
+                    fs.readFile(currentFilePath, (er, datum)=>{
+                        // console.log(datum)
+                        if(!er) {
+                            let currentData = JSON.parse(datum)
+                            //console.log(currentData)
+                            finalResuls.push(currentData)
+                            //console.log(finalResuls)
+                        }
+                        else {
+                            LogError('An Error has occured', new Date(), er, "reading file", v)
+                            reject(er)
+                        }
+                    })
+                })
+                */
+                resolve(markets)
+
+            }
+            else {
+                LogError("An Error has occured", new Date(), er, "getAllMarketData", "all market")
+                //callback(null)
+                reject(er)
+            }
+        })
+    })
+
+
+
+}
+
+function deleteData(filepath,callback ) {
+    try {
+
+        var basename = path.basename(filepath)
+        var extName = path.extname(filepath)
+        var filename = basename+"."+extName
+
+        var realFilePath = path.join(__dirname, "../", "marketsStore", filepath)
+
+        fs.unlink(realFilePath, (er)=> {
+            if(!er) {
+                callback(true)
+            }
+            else {
+                callback(false)
+            }
+        })
+    }
+    catch(er) {
+        LogError("An Error has occured", new Date(), er, "readuserData", {name:marketsName, description:description, originalName:name})
+        callback(null)
+    }
+}
 function LogError (message, timeOfOccurence, StackTrace, methodName, currentUser){
     var dti = new Date()
     var timeOfIt = dti.getFullYear()+""+dti.getMonth()+""+dti.getDay()+""+dti.getHours()+""+dti.getMinutes()+""+dti.getSeconds()
@@ -103,7 +298,14 @@ function LogError (message, timeOfOccurence, StackTrace, methodName, currentUser
 }
 
 module.exports = {
+    readCategoryData:readCategoryData,
+    addMarketCategory:addMarketCategory,
+    allMarketCategory:allMarketCategory,
     storeUserData:storeUserData,
     LogError:LogError,
-    readUserData:readUserData
+    readUserData:readUserData,
+    storeMarketInfo:storeMarketInfo,
+    deleteData:deleteData,
+    readMarketData, readMarketData,
+    getAllMarketData:getAllMarketData
 }

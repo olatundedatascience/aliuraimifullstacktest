@@ -1,0 +1,1 @@
+{"message":"An Error has occured","timeOfOccurence":"2020-05-24T06:07:28.467Z","StackTrace":{"errno":-4058,"code":"ENOENT","syscall":"open","path":"C:\\Users\\raimi.aliu\\Desktop\\tunde\\react_progs\\Projects\\FullstackTest\\marketdatabank\\backend\\data\\omohjay@gmail.com.json"},"methodName":"readuserData","currentUser":"omohjay@gmail.com"}

@@ -25,7 +25,7 @@ class AuthController {
                         response.description ="authentication successful"
                         response.response = tokens
                 
-                        res.status(400).send(response)
+                        res.status(200).send(response)
                         //readUserData()
                     }
                     else {
@@ -34,7 +34,7 @@ class AuthController {
                         response.message = `no data found ${email}`
                         response.description ="Failed"
                 
-                        res.status(400).send(response)
+                        res.status(200).send(response)
                     }
                 })
             }
